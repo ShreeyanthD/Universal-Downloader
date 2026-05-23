@@ -15,6 +15,8 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOWNLOADS_FOLDER = os.path.join(BASE_DIR, "downloads")
 app.secret_key = os.getenv("APP_SECRET_KEY")
 BASE_URL = os.getenv("BASE_URL")
 admin_password = os.getenv("ADMIN_PASSWORD")
@@ -150,7 +152,7 @@ def home():
 @app.route("/downloads/<path:filename>")
 def serve_file(filename):
     return send_from_directory(
-        "downloads",
+        (DOWNLOADS_FOLDER,
         filename
     )
 
@@ -158,7 +160,7 @@ def serve_file(filename):
 @app.route("/download/<path:filename>")
 def download_file(filename):
     return send_from_directory(
-        "downloads",
+        (DOWNLOADS_FOLDER,
         filename,
         as_attachment = True
     )
