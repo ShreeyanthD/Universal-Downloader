@@ -16,14 +16,14 @@ app = Flask(__name__)
 CORS(app)
 
 app.secret_key = os.getenv("APP_SECRET_KEY")
-dev_ip = os.getenv("IP")
+BASE_URL = os.getenv("BASE_URL")
 admin_password = os.getenv("ADMIN_PASSWORD")
 
 # Admin page
 @app.route("/admin", methods=["GET","POST"])
 def admin():
     if not session.get("admin"):
-        return redirect(f"http://{dev_ip}:3000")
+        return redirect("/admin-login")
     
 
     if request.method == "POST":
@@ -202,4 +202,4 @@ if __name__ == "__main__":
         daemon=True
     ).start()
 
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)

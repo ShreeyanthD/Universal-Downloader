@@ -25,7 +25,7 @@ function App() {
       setError("");
       setLoading(true);
     const response = await fetch(
-      "http://192.168.31.162:5000/fetch",
+      `${process.env.REACT_APP_API_URL}/fetch`,
       {
         method: "POST",
         headers: {
@@ -108,7 +108,7 @@ return (
 
       <input
         type="text"
-        placeholder="Paste Instagram URL"
+        placeholder="Paste Any URL"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         style={{

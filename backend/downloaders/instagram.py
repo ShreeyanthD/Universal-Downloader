@@ -1,7 +1,9 @@
 import instaloader
 import os
 from dotenv import load_dotenv
-dev_ip = os.getenv("IP")
+
+load_dotenv()
+BASE_URL = os.getenv("BASE_URL")
 
 def download_instagram(url):
     loader = instaloader.Instaloader()
@@ -36,8 +38,8 @@ def download_instagram(url):
         dow_path = f"{dow_name}/{mp4_files[0]}"
             
         return{
-            "download_url": f"http://{dev_ip}:5000/{dow_path}",
-            "preview_url": f"http://{dev_ip}:5000/{file_path_onlymp4}",
+            "download_url": f"{BASE_URL}/{dow_path}",
+            "preview_url": f"{BASE_URL}/{file_path_onlymp4}",
             "type" : "Video"
         }
 
@@ -47,8 +49,8 @@ def download_instagram(url):
         file_path_onlyjpg = f"{folder_name}/{jpg_files[0]}"
         dow_path = f"{dow_name}/{jpg_files[0]}"
         return{
-            "download_url": f"http://{dev_ip}:5000/{dow_path}",
-            "preview_url": f"http://{dev_ip}:5000/{file_path_onlyjpg}",
+            "download_url": f"{BASE_URL}/{dow_path}",
+            "preview_url": f"{BASE_URL}/{file_path_onlyjpg}",
             "type" : "Post"
         }
     else:

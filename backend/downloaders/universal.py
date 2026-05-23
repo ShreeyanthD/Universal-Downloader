@@ -2,7 +2,8 @@ import yt_dlp
 import os
 from dotenv import load_dotenv
 
-dev_ip = os.getenv("IP")
+load_dotenv()
+BASE_URL = os.getenv("BASE_URL")
 
 def download_anything(url):
 
@@ -29,8 +30,8 @@ def download_anything(url):
         if mp4_files:
             filename = mp4_files[0]
 
-            preview_url = f"http://{dev_ip}:5000/{folder_path}/{filename}"
-            download_url = f"http://{dev_ip}:5000/{dow_path}/{filename}"
+            preview_url = f"{BASE_URL}/{folder_path}/{filename}"
+            download_url = f"{BASE_URL}/{dow_path}/{filename}"
 
 
             return{
