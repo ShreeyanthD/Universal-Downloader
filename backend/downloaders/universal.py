@@ -10,6 +10,14 @@ def download_anything(url):
     ydl_opts = {
         "outtmpl": "downloads/%(id)s/%(id)s.%(ext)s",
         "socket_timeout":60,
+        "extractor_args": {
+        "youtube": {
+        "player_client": ["android"]
+                    }
+            },
+        "http_headers": {
+        "User-Agent": "Mozilla/5.0"
+            }
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
