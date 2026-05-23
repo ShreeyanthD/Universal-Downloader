@@ -103,7 +103,7 @@ return (
           textAlign: "center",
         }}
       >
-        Download reels and posts instantly
+        Download any vidoes or posts instantly from any platform
       </p>
 
       <input
@@ -259,7 +259,7 @@ return (
           textAlign: "center",
         }}
       >
-        Built with React + Flask
+        ⚠️ YouTube vidoes feature is experimental / may fail due to platform restrictions
       </p>
     </div>
   </div>

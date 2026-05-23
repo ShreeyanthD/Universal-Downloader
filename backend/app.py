@@ -190,7 +190,12 @@ def fetch():
             "status": "error",
             "message": "Server took too long to respond. Try again."
         }, 500
+    elif "Sign in to confirm" in error_message:
 
+        return {
+            "status" : "error",
+            "message" : "YouTube downloads may occasionally fail due to platform restrictions on cloud servers."
+        }
     return {
         "status": "error",
         "message": "Something went wrong"
