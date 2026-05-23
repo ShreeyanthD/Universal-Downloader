@@ -12,12 +12,17 @@ def download_anything(url):
         "socket_timeout":60,
         "extractor_args": {
         "youtube": {
-        "player_client": ["android"]
-                    }
-            },
-        "http_headers": {
-        "User-Agent": "Mozilla/5.0"
-            }
+            "player_client": ["android"]
+        }
+    },
+
+    "http_headers": {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/137.0.0.0 Safari/537.36"
+        )
+    }
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
