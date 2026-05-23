@@ -152,7 +152,7 @@ def home():
 @app.route("/downloads/<path:filename>")
 def serve_file(filename):
     return send_from_directory(
-        (DOWNLOADS_FOLDER,
+        DOWNLOADS_FOLDER,
         filename
     )
 
@@ -160,7 +160,7 @@ def serve_file(filename):
 @app.route("/download/<path:filename>")
 def download_file(filename):
     return send_from_directory(
-        (DOWNLOADS_FOLDER,
+        DOWNLOADS_FOLDER,
         filename,
         as_attachment = True
     )
