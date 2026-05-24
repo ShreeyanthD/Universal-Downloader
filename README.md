@@ -7,14 +7,16 @@ A full-stack media downloader supporting Instagram, Facebook, and YouTube using 
 - Instagram media downloading
 - Facebook video downloading
 - YouTube downloading
+- Instagram multi-post/carousel support
 - Preview before download
 - Separate preview & download routes
+- Fullscreen image preview modal
 - Mobile/iPhone compatibility
-- Admin authentication system
+- Smart loading screen with cold-start detection
+- Admin authentication and cleaning system
 - Automatic cleanup system
-- Responsive UI
 - Environment variable support
-- Cloud deployment support
+- Cloud deployment support (frontend and backend)
 
 ---
 
@@ -169,6 +171,13 @@ Deployed on Vercel.
 - Production debugging
 
 ---
+## 🚀 Future Improvements
+
+- Better YouTube support
+- Audio download support
+- Download progress tracking
+- More platform support
+- Improved animations & UI
 
 ## License
 
