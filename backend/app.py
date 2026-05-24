@@ -1,9 +1,7 @@
-from flask import Flask, request, redirect, url_for, send_file, session
+from flask import Flask, request, redirect, session
 from flask_cors import CORS
-import instaloader
 import os
 from flask import send_from_directory
-import shutil
 from cleanup import cleanup_loop
 import threading
 from manual_cleanup import cleanupm

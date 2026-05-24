@@ -1,4 +1,5 @@
-import { useState } from "react";
+import {  useState,useEffect } from "react";
+import "./App.css";
 
 function App() {
 
@@ -8,12 +9,91 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("")
+  const [MultipostP, setMultipostP] = useState([])
+  const [MultipostD, setMultipostD] = useState([])
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const [coldStart, setColdStart] = useState(false);
+  const [factIndex, setFactIndex] = useState(0)
+
+  //for keyboard moments
+    useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (selectedIndex === null) return;
+
+    if (e.key === "ArrowRight") {
+      setSelectedIndex((prev) =>
+        prev === MultipostP.length - 1 ? 0 : prev + 1
+      );
+    }
+
+    if (e.key === "ArrowLeft") {
+      setSelectedIndex((prev) =>
+        prev === 0 ? MultipostP.length - 1 : prev - 1
+      );
+    }
+
+    if (e.key === "Escape") {
+      setSelectedIndex(null);
+    }
+  };
+  window.addEventListener("keydown", handleKeyDown);
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, [selectedIndex, MultipostP.length]);
+
+//for facts
+const facts = [
+  "Honey never spoils 🍯",
+  "Octopuses have three hearts 🐙",
+  "Bananas are technically berries 🍌",
+  "Sharks existed before trees 🦈",
+  "A day on Venus is longer than a year there 🪐",
+  "Wombat poop is cube-shaped 😭",
+  "The Eiffel Tower grows in summer ☀️",
+  "Your brain is more active while dreaming 💭",
+  "There are more stars than grains of sand ✨",
+  "Cows have best friends 🐄",
+  "The moon slowly moves away from Earth 🌕",
+  "Sloths can hold their breath longer than dolphins 🦥",
+  "Water can boil and freeze at the same time ❄️",
+  "Koalas sleep up to 22 hours a day 😴",
+  "An apple floats because it’s 25% air 🍎",
+  "Some turtles can breathe through their butts 🐢",
+  "A cloud can weigh over a million pounds ☁️",
+  "The human nose can detect over 1 trillion smells 👃",
+  "Sea otters hold hands while sleeping 🦦",
+  "There’s enough DNA in your body to stretch to the sun and back ☀️",
+  "Flamingos are born grey 🦩",
+  "A group of crows is called a murder 🐦",
+  "The first alarm clock only rang at 4 AM ⏰",
+  "Penguins propose with pebbles 🐧",
+  "Some cats are allergic to humans 😭",
+  "The heart of a shrimp is in its head 🍤",
+  "There are more fake flamingos than real ones in the world 🦩",
+  "Butterflies can taste with their feet 🦋",
+  "A strawberry isn’t technically a berry 🍓",
+  "The shortest war in history lasted 38 minutes ⚔️"
+]
+
+useEffect(() => {
+
+  if (!loading) return;
+
+  const interval = setInterval(() => {
+    setFactIndex((prev) => (prev + 1) % facts.length)
+  }, 4000)
+
+  return () => clearInterval(interval)
+
+}, [loading,facts.length])
 
   async function handleFetch() {
     setMediaUrl("");
     setMediaType("");
     setDownloadUrl("");
-
+    setMultipostP([])
+    setMultipostD([])
 
      if (!url) {
     alert("Please enter URL");
@@ -24,6 +104,10 @@ function App() {
     try {
       setError("");
       setLoading(true);
+      setColdStart(false);
+      const coldTimer = setTimeout(() => {
+        setColdStart(true)
+      }, 12000)
     const response = await fetch(
       `${process.env.REACT_APP_API_URL}/fetch`,
       {
@@ -39,22 +123,37 @@ function App() {
     if (!response.ok) {
       setError(data.message);
       setLoading(false)
+      setColdStart(false)
+      clearTimeout(coldTimer)
       return;
     }
     setLoading(false);
+    setColdStart(false)
+    clearTimeout(coldTimer)
 
     const type = data["type"]
     setMediaType(type)
 
-    setMediaUrl(data["preview_url"]);
-    setDownloadUrl(data["download_url"]);
+    if (type === "Posts") {
+      setMultipostP(data["preview_urls"])
+      setMultipostD(data["download_urls"])
+    }
+    else{
+      setMediaUrl(data["preview_url"]);
+      setDownloadUrl(data["download_url"]);
+
+    }
+    
 
   } catch (error) {
     setError("Something went wrong");
     setLoading(false);
+    setColdStart(false)
     console.log("Error:", error);
 
   }
+
+
 }
 
 return (
@@ -95,6 +194,7 @@ return (
         📥 Universal Downloader
       </h1>
 
+
       <p
         style={{
           marginTop: "-5px",
@@ -103,7 +203,7 @@ return (
           textAlign: "center",
         }}
       >
-        Download any vidoes or posts instantly from any platform
+        Download any videos or posts instantly from any platform
       </p>
 
       <input
@@ -124,6 +224,7 @@ return (
 
       <button
         onClick={handleFetch}
+        disabled={loading}
         style={{
           width: "100%",
           padding: "12px",
@@ -132,13 +233,102 @@ return (
           backgroundColor: "#0095f6",
           color: "white",
           fontWeight: "bold",
-          cursor: "pointer",
           fontSize: "15px",
           transition: "0.2s",
+          opacity: loading ? 0.7 : 1,
+          cursor: loading ? "not-allowed" : "pointer",
         }}
       >
-        {loading ? "Fetching..." : "Fetch"}
+        Fetch
       </button>
+
+{loading && (
+  <div
+    style={{
+      width: "100%",
+      backgroundColor: "#181818",
+      padding: "20px",
+      borderRadius: "15px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "15px",
+      boxSizing: "border-box",
+    }}
+  >
+
+    <div className="spinner"></div>
+
+    {!coldStart ? (
+      <>
+        <h3 style={{ margin: 0 }}>
+          Fetching Media...
+        </h3>
+       
+        <p
+          style={{
+            margin: 0,
+            color: "#999",
+            textAlign: "center",
+            fontSize: "14px",
+          }}
+        >
+          Preparing media for preview and download
+        </p>
+         <p
+  style={{
+    margin: 0,
+    color: "#00bfff",
+    fontSize: "13px",
+    textAlign: "center",
+    fontStyle: "italic",
+  }}
+>
+  💡 Did you know? {facts[factIndex]}
+</p>
+      </>
+    ) : (
+      <>
+        <h3
+          style={{
+            margin: 0,
+            textAlign: "center",
+          }}
+        >
+          Starting cloud server...
+        </h3>
+
+        <p
+          style={{
+            margin: 0,
+            color: "#999",
+            textAlign: "center",
+            fontSize: "14px",
+            lineHeight: "1.6",
+          }}
+        >
+          Free servers sleep after inactivity.
+          <br />
+          First request may take 30-60 seconds.
+          <br />
+        </p>
+        
+         <p
+  style={{
+    margin: 0,
+    color: "#00bfff",
+    fontSize: "13px",
+    textAlign: "center",
+    fontStyle: "italic",
+  }}
+>
+  💡 Did you know? {facts[factIndex]}
+</p>
+      </>
+    )}
+
+  </div>
+)}
 
       {error && (
         <p
@@ -168,6 +358,7 @@ return (
         >
           <video
             controls
+            playsInline
             width="100%"
             style={{
               borderRadius: "12px",
@@ -201,7 +392,66 @@ return (
           </a>
         </div>
       )}
+      {mediaType === "Posts" && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: "10px",
+            width: "100%",
+            backgroundColor: "#181818",
+            padding: "10px",
+            borderRadius: "15px",
+            boxSizing: "border-box",
+          }}
+        >
+          {MultipostP.map((MultipostP, index) => (
+            <div
+              key={index}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}
+            >
+              <img
+                src={MultipostP}
+                alt={`post-${index}`}
+                onClick={() => setSelectedIndex(index)}
+                style={{
+                  width: "100%",
+                  borderRadius: "12px",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                }}
+              />
 
+              <a
+                href={MultipostD[index]}
+                download
+                style={{
+                  width: "100%",
+                }}
+              >
+                <button
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    borderRadius: "10px",
+                    border: "none",
+                    backgroundColor: "#2ea44f",
+                    color: "white",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                  }}
+                >
+                  Download
+                </button>
+              </a>
+            </div>
+          ))}
+        </div>
+      )}
       {mediaType === "Post" && (
         <div
           style={{
@@ -250,7 +500,122 @@ return (
           </a>
         </div>
       )}
+      {selectedIndex !== null && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0,0,0,0.9)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    }}
+  >
+    <button
+      onClick={() => setSelectedIndex(null)}
+      style={{
+        position: "absolute",
+        top: "20px",
+        right: "20px",
+        fontSize: "30px",
+        background: "none",
+        color: "white",
+        border: "none",
+        cursor: "pointer",
+      }}
+    >
+      ✕
+    </button>
+      <div
+  style={{
+    position: "absolute",
+    top: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    color: "white",
+    fontSize: "18px",
+    fontWeight: "bold",
+  }}
+>
+  {selectedIndex + 1} / {MultipostP.length}
+</div>
+    <button
+      onClick={() =>
+        setSelectedIndex((prev) =>
+          prev === 0 ? MultipostP.length - 1 : prev - 1
+        )
+      }
+      style={{
+        position: "absolute",
+        left: "20px",
+        fontSize: "40px",
+        background: "none",
+        color: "white",
+        border: "none",
+        cursor: "pointer",
+      }}
+    >
+      ‹
+    </button>
 
+    <img
+      src={MultipostP[selectedIndex]}
+      alt=""
+      style={{
+        maxWidth: "90%",
+        maxHeight: "90%",
+        borderRadius: "12px",
+      }}
+    />
+    <a
+  href={MultipostD[selectedIndex]}
+  download
+  style={{
+    position: "absolute",
+    bottom: "20px",
+    textDecoration: "none",
+  }}
+>
+  <button
+    style={{
+      padding: "12px 20px",
+      borderRadius: "12px",
+      border: "none",
+      backgroundColor: "#2ea44f",
+      color: "white",
+      fontWeight: "bold",
+      cursor: "pointer",
+      fontSize: "16px",
+    }}
+  >
+    Download
+  </button>
+</a>
+
+    <button
+      onClick={() =>
+        setSelectedIndex((prev) =>
+          prev === MultipostP.length - 1 ? 0 : prev + 1
+        )
+      }
+      style={{
+        position: "absolute",
+        right: "20px",
+        fontSize: "40px",
+        background: "none",
+        color: "white",
+        border: "none",
+        cursor: "pointer",
+      }}
+    >
+      ›
+    </button>
+  </div>
+)}
       <p
         style={{
           fontSize: "12px",
@@ -259,7 +624,7 @@ return (
           textAlign: "center",
         }}
       >
-        ⚠️ YouTube vidoes feature is experimental / may fail due to platform restrictions
+        ⚠️ YouTube videos feature is experimental / may fail due to platform restrictions
       </p>
     </div>
   </div>
