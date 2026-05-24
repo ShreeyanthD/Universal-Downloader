@@ -171,7 +171,7 @@ Deployed on Vercel.
 - Production debugging
 
 ---
-## 🚀 Future Improvements
+## Future Improvements
 
 - Better YouTube support
 - Audio download support
