@@ -8,6 +8,13 @@ from manual_cleanup import cleanupm
 from dotenv import load_dotenv
 # from downloaders.instagram import download_instagram
 from downloaders.universal import download_anything
+import sys
+import yt_dlp
+import instaloader
+
+print("Python:", sys.version)
+print("yt-dlp:", yt_dlp.version.__version__)
+print("Instaloader:", instaloader.__version__)
 
 load_dotenv() 
 app = Flask(__name__)
