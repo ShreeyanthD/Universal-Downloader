@@ -6,7 +6,7 @@ from cleanup import cleanup_loop
 import threading
 from manual_cleanup import cleanupm
 from dotenv import load_dotenv
-# from downloaders.instagram import download_instagram
+from downloaders.instagram import download_instagram
 from downloaders.universal import download_anything
 import sys
 import yt_dlp
@@ -182,11 +182,11 @@ def fetch():
     }, 400
 
     try:
-        return download_anything(url)
-        # if("instagram.com" in url):
-        #     return download_instagram(url)
-        # else:
-        #     return download_anything(url)
+        # return download_anything(url)
+        if("instagram.com" in url):
+            return download_instagram(url)
+        else:
+            return download_anything(url)
     except Exception as e: 
          error_message = str(e)
 
