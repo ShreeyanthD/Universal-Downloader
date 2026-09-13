@@ -175,6 +175,7 @@ def fetch():
     }, 400
 
     try:
+        # return download_anything(url)
         if("instagram.com" in url):
             return download_instagram(url)
         else:
